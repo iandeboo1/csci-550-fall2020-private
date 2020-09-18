@@ -2,16 +2,16 @@ import java.util.*;
 
 public class FrequentItemsetGenerator {
 
-    int k = 1;
+    private int k = 1;
     List<List<Integer>> subsetList = new ArrayList<>();
 
-    public Map<List<Integer>, Integer> apriori(Map<String, List<Integer>> DB, List<int[]> I, int minsup) {
+    public Map<List<Integer>, Integer> apriori(Map<String, List<Integer>> DB, List<Integer> I, int minsup) {
         Map<List<Integer>, Integer> F = new HashMap<>();
         Map<List<Integer>, Integer> C = new HashMap<>();
-        for (int[] itemset : I) {                                               //I will only contain single itemsets
-            List<Integer> arrayConverter = new ArrayList<>();    //TODO: MAY BE ABLE TO IMPROVE THIS IF I IS TURNED INTO A LIST<INTEGERS>, THEN NO CONVERSION WOULD BE NEEDED
-            arrayConverter.add(itemset[0]);
-            C.put(arrayConverter, 0);
+        for (Integer item : I) {
+            List<Integer> temp = new ArrayList<>();
+            temp.add(item);
+            C.put(temp, 0);
         }
         while (!C.isEmpty()) {
             computeSupport(C, DB);
@@ -27,6 +27,7 @@ public class FrequentItemsetGenerator {
                 C.remove(entryToRemove);
             }
             C = extendPrefixTree(C);
+            System.out.println("F is: " + F);
             k = k + 1;
         }
         return F;
@@ -55,8 +56,10 @@ public class FrequentItemsetGenerator {
                 iter2.next();                                                   //move 2nd iterator to value after the value in 1st iterator
             }
             while (iter2.hasNext()) {                                           //for each other value in C greater than the 1st value
-                Map.Entry<List<Integer>, Integer> entry2 = iter1.next();
+                Map.Entry<List<Integer>, Integer> entry2 = iter2.next();
+                System.out.println(oldC);
                 List<Integer> adjoinedList = adjoinList(entry1.getKey(), entry2.getKey(), newC);
+                System.out.println(oldC);
                 if (!adjoinedList.isEmpty()) {
                     List<List<Integer>> kSubsets = getSubsets(adjoinedList);   //gets all subsets of the adjoined itemset
                     boolean containsAll = true;
@@ -70,6 +73,7 @@ public class FrequentItemsetGenerator {
                         newC.put(adjoinedList, 0);                              //adds adjoined itemset to next level of tree with support = 0
                     }
                 }   //TODO: COULD POSSIBLY IMPROVE EFFICIENCY HERE BY SKIPPING THE REST IF IT FINDS NON-MATCHES, NOT SURE YET
+                place++;
             }
         }
         return newC;

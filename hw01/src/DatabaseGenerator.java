@@ -1,45 +1,69 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class DatabaseGenerator {
 
+    public static final String delimiter = ",";
     private Map<String, List<Integer>> database;
-    private List<int[]> itemsets;
+    private List<Integer> itemset;
+    private List<String> txns = new ArrayList<>();
+    private List<Integer> ids = new ArrayList<>();
 
-    public DatabaseGenerator() {
-        database = new HashMap<String, List<Integer>>();        //txn database
-        itemsets = new ArrayList<int[]>();                      //all possible itemsets
+    public DatabaseGenerator(String csvFile) {
+        database = new HashMap<>();                          //txn database
+        itemset = new ArrayList<>();                         //all possible itemsets
 
-        //everything below here in this function is just testing code and needs to be removed later
-        int[] arr = {1, 2, 3, 4};
-        int[] arr2 = {5, 6, 7, 8};
-        int[] arr3 = {9, 10, 11, 12};
-        List<Integer> ls1 = new ArrayList<Integer>();
-        List<Integer> ls2 = new ArrayList<Integer>();
-        List<Integer> ls3 = new ArrayList<Integer>();
-        for (int u = 0; u < 4; u++) {
-            ls1.add(arr[u]);
-            ls2.add(arr2[u]);
-            ls3.add(arr3[u]);
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(csvFile));
+            String line = "";
+            int count = 0;
+            String[] lineArray;                                                  //array of 4 columns in each line
+            while ((line = br.readLine()) != null) {                             //reads through file line by line
+                if (count != 0) {
+                    lineArray = line.split(delimiter);                           //divides line into 4 columns, based on commas
+                    txns.add(lineArray[0]);
+                    ids.add(Integer.parseInt(lineArray[2]));
+                }
+                count++;
+            }
+            br.close();
+        } catch(IOException ioe) {
+            ioe.printStackTrace();
         }
-        database.put("001", ls1);
-        database.put("002", ls2);
-        database.put("003", ls3);
-
-        int[] array = {1};
-        int[] array2 = {5};
-        int[] array3 = {12};
-        itemsets.add(array);
-        itemsets.add(array2);
-        itemsets.add(array3);
-        //TODO: REMEMBER WHEN SETTING THESE IN THE REAL THING, IT'S IMPERATIVE TO ADD THEM IN ORDER FROM LEAST TO GREATEST VALUE
     }
 
     public Map<String, List<Integer>> createDatabase() {
+        if (txns.size() == ids.size()) {
+            for (int i = 0; i < txns.size(); i++) {                             //loop through each row in csv file, but now represented in 2 separate lists
+                if (database.containsKey(txns.get(i))) {                        //txn number already in database, the new item ID will be added to its item list
+                    List<Integer> itemset = database.get(txns.get(i));
+                    itemset.add(ids.get(i));
+                    Collections.sort(itemset);
+                    database.replace(txns.get(i), itemset);
+                } else {                                                        //a new txn number is found and is added to database along with first item ID
+                    List<Integer> newTxnItemList = new ArrayList<>();
+                    newTxnItemList.add(ids.get(i));
+                    database.put(txns.get(i), newTxnItemList);
+                }
+            }
+        } else {
+            System.out.println("\nUnevequal amount of transaction IDs and item IDs!");
+        }
         return database;
     }
 
-    public List<int[]> createItemset() {
-        return itemsets;
+    public List<Integer> createItemset() {
+        List<Integer> duplicateFreeList = new ArrayList<>();
+        for (Integer value : ids) {
+            if (!duplicateFreeList.contains(value)) {
+                duplicateFreeList.add(value);
+            }
+        }
+        Collections.sort(duplicateFreeList);
+        itemset = duplicateFreeList;
+        return itemset;
     }
 
 }
