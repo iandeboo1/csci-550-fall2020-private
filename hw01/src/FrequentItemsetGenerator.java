@@ -2,8 +2,13 @@ import java.util.*;
 
 public class FrequentItemsetGenerator {
 
-    private int k = 1;
-    List<List<Integer>> subsetList = new ArrayList<>();
+    private int k;
+    List<List<Integer>> subsetList;
+
+    public FrequentItemsetGenerator() {
+        k = 1;
+        subsetList = new ArrayList<>();
+    }
 
     public Map<List<Integer>, Integer> apriori(Map<String, List<Integer>> DB, List<Integer> I, int minsup) {
         Map<List<Integer>, Integer> F = new HashMap<>();
@@ -27,7 +32,6 @@ public class FrequentItemsetGenerator {
                 C.remove(entryToRemove);
             }
             C = extendPrefixTree(C);
-            System.out.println("F is: " + F);
             k = k + 1;
         }
         return F;
@@ -57,9 +61,7 @@ public class FrequentItemsetGenerator {
             }
             while (iter2.hasNext()) {                                           //for each other value in C greater than the 1st value
                 Map.Entry<List<Integer>, Integer> entry2 = iter2.next();
-                System.out.println(oldC);
                 List<Integer> adjoinedList = adjoinList(entry1.getKey(), entry2.getKey(), newC);
-                System.out.println(oldC);
                 if (!adjoinedList.isEmpty()) {
                     List<List<Integer>> kSubsets = getSubsets(adjoinedList);   //gets all subsets of the adjoined itemset
                     boolean containsAll = true;
@@ -72,9 +74,9 @@ public class FrequentItemsetGenerator {
                     if (containsAll) {
                         newC.put(adjoinedList, 0);                              //adds adjoined itemset to next level of tree with support = 0
                     }
-                }   //TODO: COULD POSSIBLY IMPROVE EFFICIENCY HERE BY SKIPPING THE REST IF IT FINDS NON-MATCHES, NOT SURE YET
-                place++;
+                }
             }
+            place++;
         }
         return newC;
     }
@@ -90,17 +92,19 @@ public class FrequentItemsetGenerator {
             }
         }
         if (k == 1 || commonElements == (k - 1)) {                              //confirms they can be added
-            for (Integer entry : list2) {                                       //adds lists together without duplicates
-                if (!list1.contains(entry)) {
-                    list1.add(entry);
+            adjoinedList.addAll(list1);                                         //adds all non-duplicate items into new list
+            for (Integer entry : list2) {
+                if (!adjoinedList.contains(entry)) {
+                    adjoinedList.add(entry);
                 }
             }
-            Collections.sort(list1);
+            Collections.sort(adjoinedList);
         }
-        if (!newC.containsKey(list1)) {                                         //ensures no duplicate entries in newC
-            adjoinedList = list1;
+        if (!newC.containsKey(adjoinedList)) {                                   //ensures no duplicate entries in newC
+            return adjoinedList;
+        } else {
+            return new ArrayList<>();
         }
-        return adjoinedList;
     }
 
     public List<List<Integer>> getSubsets(List<Integer> input) {

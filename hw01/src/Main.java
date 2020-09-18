@@ -7,7 +7,8 @@ public class Main {
     public static void main (String[] args) {
 
         String csvFile = "/Users/ian/Desktop/CSCI 550 - Data Mining/csci-550-fall2020-private/hw01/dept.csv";
-        int minsum = 1;
+        int minsum = 4;
+        double minconf = 0.5;
 
         DatabaseGenerator dbg = new DatabaseGenerator(csvFile);
         Map<String, List<Integer>> database = dbg.createDatabase();
@@ -15,7 +16,10 @@ public class Main {
 
         FrequentItemsetGenerator fig = new FrequentItemsetGenerator();
         Map<List<Integer>, Integer> fItemSet = fig.apriori(database, itemset, minsum);
-        System.out.println(fItemSet);
+        System.out.println("F: " + fItemSet);
+
+        StrongRuleGenerator srg = new StrongRuleGenerator();
+        srg.AssociationRules(fItemSet, minconf);
     }
 
 }

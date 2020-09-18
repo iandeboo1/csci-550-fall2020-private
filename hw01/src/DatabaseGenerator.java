@@ -1,15 +1,13 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class DatabaseGenerator {
 
     public static final String delimiter = ",";
-    private Map<String, List<Integer>> database;
+    private final Map<String, List<Integer>> database;
     private List<Integer> itemset;
-    private List<String> txns = new ArrayList<>();
-    private List<Integer> ids = new ArrayList<>();
+    private final List<String> txns = new ArrayList<>();
+    private final List<Integer> ids = new ArrayList<>();
 
     public DatabaseGenerator(String csvFile) {
         database = new HashMap<>();                          //txn database
@@ -17,12 +15,12 @@ public class DatabaseGenerator {
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(csvFile));
-            String line = "";
+            String line;
             int count = 0;
             String[] lineArray;                                                  //array of 4 columns in each line
             while ((line = br.readLine()) != null) {                             //reads through file line by line
-                if (count != 0) {
-                    lineArray = line.split(delimiter);                           //divides line into 4 columns, based on commas
+                lineArray = line.split(delimiter);                               //divides line into 4 columns, based on commas
+                if (count != 0 && lineArray.length == 4) {
                     txns.add(lineArray[0]);
                     ids.add(Integer.parseInt(lineArray[2]));
                 }
