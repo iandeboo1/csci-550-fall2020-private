@@ -64,4 +64,18 @@ public class DatabaseGenerator {
         return itemset;
     }
 
+    public int getSize() {
+        List<String> uniqueTxns = new ArrayList<>();
+        if (txns.size() == ids.size()) {
+            for (int i = 0; i < txns.size(); i++) {                             //loop through each row in the txn list
+                if (!uniqueTxns.contains(txns.get(i))) {
+                    uniqueTxns.add(txns.get(i));
+                }
+            }
+        } else {
+            System.out.println("\nUnevequal amount of transaction IDs and item IDs!");
+        }
+        return uniqueTxns.size();
+    }
+
 }

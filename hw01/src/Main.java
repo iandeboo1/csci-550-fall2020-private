@@ -7,7 +7,7 @@ public class Main {
     public static void main (String[] args) {
 
         String csvFile = "/Users/ian/Desktop/CSCI 550 - Data Mining/csci-550-fall2020-private/hw01/dept.csv";
-        int minsum = 4;
+        int minsum = 2;
         double minconf = 0.5;
 
         DatabaseGenerator dbg = new DatabaseGenerator(csvFile);
@@ -19,7 +19,13 @@ public class Main {
         System.out.println("F: " + fItemSet);
 
         StrongRuleGenerator srg = new StrongRuleGenerator();
-        srg.AssociationRules(fItemSet, minconf);
+        List<Rule> strongRuleSet = srg.AssociationRules(fItemSet, minconf);
+        for (Rule rule : strongRuleSet) {
+            System.out.println(rule.getAntecedent() + " --> " + rule.getConsequent());
+        }
+
+        RankedRulesGenerator rrg = new RankedRulesGenerator();
+
     }
 
 }
