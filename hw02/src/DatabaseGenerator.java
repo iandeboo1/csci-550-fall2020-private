@@ -7,7 +7,7 @@ import java.util.ListIterator;
 public class DatabaseGenerator {
 
     public static final String delimiter = ",";
-    private final List<List<Double>> database;
+    private final List<Point> database;
 
     public DatabaseGenerator(String csvFile) {
         database = new ArrayList<>();
@@ -18,9 +18,9 @@ public class DatabaseGenerator {
             while ((line = br.readLine()) != null) {                    //reads through file line by line
                 lineArray = line.split(delimiter);                      //divides line into columns, based on commas
                 if (lineArray.length == 4) {
-                    List<Double> point = new ArrayList<>();
+                    Point point = new Point(null);
                     for (String dimensionValue : lineArray) {
-                        point.add(Double.parseDouble(dimensionValue));
+                        point.addDimensionValue(Double.parseDouble(dimensionValue));
                     }
                     database.add(point);
                 }
@@ -31,7 +31,7 @@ public class DatabaseGenerator {
         }
     }
 
-    public List<List<Double>> getDatabase() {
+    public List<Point> getDatabase() {
         return database;
     }
 

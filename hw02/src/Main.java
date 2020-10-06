@@ -10,10 +10,10 @@ public class Main {
         double E = 0.25;
 
         DatabaseGenerator dbg = new DatabaseGenerator(csvFile);
-        List<List<Double>> database = dbg.getDatabase();
+        List<Point> database = dbg.getDatabase();
 
         K_Means_Algorithm kma = new K_Means_Algorithm();
-        Map<List<Double>, List<List<Double>>> clusters = kma.k_means(database, k, E);
+        Map<Point, Cluster> clusters = kma.k_means(database, k, E);
 
     }
 
