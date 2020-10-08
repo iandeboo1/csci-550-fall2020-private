@@ -39,7 +39,7 @@ public class K_Means_Algorithm {
                 for (Point centroid : clusters.keySet()) {
                     //calculates Euclidean distance
                     if (point.getDistanceBetween(centroid) < minDist || minDist == 0) {      //if centroid is closer than current closest, replace it
-                        minDist = point.getDistanceBetween(centroid);
+                        minDist = Math.pow(point.getDistanceBetween(centroid), 2);
                         minDistCentroid = centroid;
                     }
                 }
@@ -68,7 +68,7 @@ public class K_Means_Algorithm {
                 }
                 newClusters.put(newCentroid, cluster.getValue());
                 //calculate centroid drift for this cluster and add to total drift for all clusters
-                cumulativeCentroidDrift = cumulativeCentroidDrift + newCentroid.getDistanceBetween(cluster.getKey());      //add to total centroid drift of all clusters for this cycle
+                cumulativeCentroidDrift = cumulativeCentroidDrift + Math.pow(newCentroid.getDistanceBetween(cluster.getKey()), 2);      //add to total centroid drift of all clusters for this cycle
             }
             clusters = newClusters;
             overallCentroidImprovement = cumulativeCentroidDrift;       //gives access to drift summation value outside of while loop, for comparison to epsilon in while loop condition

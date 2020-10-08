@@ -5,12 +5,17 @@ import java.util.Map;
 
 public class DB_Scan_Algorithm {
 
-    private final Map<Integer, Cluster> clusterSet = new HashMap<>();
-    private final Cluster corePoints = new Cluster();
-    private final Cluster borderPoints = new Cluster();
-    private final Cluster noisePoints = new Cluster();
+    private final Map<Integer, Cluster> clusterSet;
+    private final Cluster corePoints;
+    private final Cluster borderPoints;
+    private final Cluster noisePoints;
 
-    public DB_Scan_Algorithm() { }
+    public DB_Scan_Algorithm() {
+        clusterSet = new HashMap<>();
+        corePoints = new Cluster();
+        borderPoints = new Cluster();
+        noisePoints = new Cluster();
+    }
 
     public void dbScan(List<Point> D, double E, int minpts) {
         for (Point point : D) {
