@@ -4,8 +4,7 @@ public class K_Means_Algorithm {
 
     public K_Means_Algorithm() {}
 
-    public Map<Point, Cluster> k_means(List<Point> D, int k, double E) {
-        int t = 0;
+    public Map<Integer, Cluster> k_means(List<Point> D, int k, double E) {
         int dim = D.get(0).getDimensionValues().size();
         double[][] dimRanges = new double[dim][2];      //array of the ranges for each point dimension
         for (Point point : D) {
@@ -18,7 +17,7 @@ public class K_Means_Algorithm {
                 }
             }
         }
-        Map<Point, Cluster> clusters = new HashMap<>();
+        Map<Integer, Cluster> clusters = new HashMap<>();
         for (int i = 0; i < k; i++) {
             Point centroid = new Point(null);
             for (int j = 0; j < dim; j++) {
@@ -26,31 +25,34 @@ public class K_Means_Algorithm {
                 Double pointDimValue = (new Random().nextDouble() * (dimRanges[j][1] - dimRanges[j][0])) + dimRanges[j][0];
                 centroid.addDimensionValue(pointDimValue);
             }
-            clusters.put(centroid, null);       //creates a randomly generated point within the bounds of the provided dataset values
+            Cluster c = new Cluster();
+            c.setCentroid(centroid);
+            clusters.put(i + 1, c);
         }
         double overallCentroidImprovement = 0;      //stores value of how much the centroid shifted as a whole in the last cycle
         while (overallCentroidImprovement < E) {
-            t++;
-            clusters.replaceAll((centroid, cluster) -> null);       //resets all clusters to contain no points
+            for (Cluster cluster : clusters.values()) {
+                cluster.clearPoints();          //resets all clusters to contain no points
+            }
             //cluster assignment
             for (Point point : D) {
-                Point minDistCentroid = null;       //closest centroid
-                double minDist = 0;                 //distance to closest centroid
-                for (Point centroid : clusters.keySet()) {
+                Integer minDistClust = null;
+                double minDist = 0;
+                for (Map.Entry<Integer, Cluster> cluster : clusters.entrySet()) {
                     //calculates Euclidean distance
-                    if (point.getDistanceBetween(centroid) < minDist || minDist == 0) {      //if centroid is closer than current closest, replace it
-                        minDist = Math.pow(point.getDistanceBetween(centroid), 2);
-                        minDistCentroid = centroid;
+                    if (point.getDistanceBetween(cluster.getValue().getCentroid()) < minDist || minDist == 0) {
+                        minDist = Math.pow(point.getDistanceBetween(cluster.getValue().getCentroid()), 2);
+                        minDistClust = cluster.getKey();
                     }
                 }
-                Cluster assignedCluster = clusters.get(minDistCentroid);
+                Cluster assignedCluster = clusters.get(minDistClust);
                 assignedCluster.addPoint(point);
-                clusters.put(minDistCentroid, assignedCluster);         //add point to closest cluster
+                clusters.put(minDistClust, assignedCluster);        //overwrites cluster entry with new cluster object containing the new point
             }
             //centroid update
-            Map<Point, Cluster> newClusters = new HashMap<>();        //will store new cluster values
+            Map<Integer, Cluster> newClusters = new HashMap<>();        //will store new cluster values
             double cumulativeCentroidDrift = 0;     //stores value to be compared to epsilon value for while loop
-            for (Map.Entry<Point, Cluster> cluster : clusters.entrySet()) {
+            for (Map.Entry<Integer, Cluster> cluster : clusters.entrySet()) {
                 Point newCentroid = new Point(null);       //the new centroid
                 //summation of each dimension value across all points in cluster
                 for (Point point : cluster.getValue().getPoints()) {
@@ -66,9 +68,11 @@ public class K_Means_Algorithm {
                 for (int i = 0; i < dim; i++) {
                     newCentroid.getDimensionValues().set(i, newCentroid.getDimensionValues().get(i) / cluster.getValue().getPoints().size());
                 }
-                newClusters.put(newCentroid, cluster.getValue());
+                Cluster newCluster = cluster.getValue();
+                newCluster.setCentroid(newCentroid);
+                newClusters.put(cluster.getKey(), newCluster);
                 //calculate centroid drift for this cluster and add to total drift for all clusters
-                cumulativeCentroidDrift = cumulativeCentroidDrift + Math.pow(newCentroid.getDistanceBetween(cluster.getKey()), 2);      //add to total centroid drift of all clusters for this cycle
+                cumulativeCentroidDrift = cumulativeCentroidDrift + Math.pow(newCentroid.getDistanceBetween(cluster.getValue().getCentroid()), 2);      //add to total centroid drift of all clusters for this cycle
             }
             clusters = newClusters;
             overallCentroidImprovement = cumulativeCentroidDrift;       //gives access to drift summation value outside of while loop, for comparison to epsilon in while loop condition

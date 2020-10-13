@@ -5,40 +5,40 @@ import java.util.Random;
 public class Polygon {
 
     private final int id;
-    private final List<RandomPoint> interiorPoints;
+    private final List<Point> interiorPoints;
     double minX = 0;
     double maxX = 0;
     double minY = 0;
     double maxY = 0;
 
-    public Polygon(int id, List<RandomPoint> interiorPoints) {
+    public Polygon(int id, List<Point> interiorPoints) {
         this.id = id;
         this.interiorPoints = interiorPoints;
         createBoundaries();
     }
 
     private void createBoundaries() {
-        for (RandomPoint pt : interiorPoints) {
-            if (pt.getX() < minX) {
-                minX = pt.getX();
+        for (Point pt : interiorPoints) {
+            if (pt.getDimensionValues().get(0) < minX) {
+                minX = pt.getDimensionValues().get(0);
             }
-            if (pt.getX() > maxX) {
-                maxX = pt.getX();
+            if (pt.getDimensionValues().get(0) > maxX) {
+                maxX = pt.getDimensionValues().get(0);
             }
-            if (pt.getY() < minY) {
-                minY = pt.getY();
+            if (pt.getDimensionValues().get(1) < minY) {
+                minY = pt.getDimensionValues().get(1);
             }
-            if (pt.getY() > maxY) {
-                maxY = pt.getY();
+            if (pt.getDimensionValues().get(1) > maxY) {
+                maxY = pt.getDimensionValues().get(1);
             }
         }
     }
 
-    public boolean insideBoundary(RandomPoint pt) {
-        if (pt.getX() < minX || pt.getX() > maxX) {
+    public boolean insideBoundary(Point pt) {
+        if (pt.getDimensionValues().get(0) < minX || pt.getDimensionValues().get(0) > maxX) {
             return false;
         } else {
-            if (pt.getY() > maxY || pt.getY() < minY) {
+            if (pt.getDimensionValues().get(1) > maxY || pt.getDimensionValues().get(1) < minY) {
                 return false;
             } else {
                 return true;
@@ -46,8 +46,15 @@ public class Polygon {
         }
     }
 
-    public int getId() { return id; }
+    public boolean contains(Point pt) {
+        for (Point truthPoint : interiorPoints) {
+            return pt.equals(truthPoint);
+        }
+        return false;
+    }
 
-    public List<RandomPoint> getInteriorPoints() { return interiorPoints; }
+    public List<Point> getInteriorPoints() { return interiorPoints; }
+
+    public int getId() { return id; }
 
 }

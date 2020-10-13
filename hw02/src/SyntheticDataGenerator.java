@@ -6,48 +6,63 @@ public class SyntheticDataGenerator {
     private final int pointsPerPoly;
     private final int numberOfPoly;
     private final int noiseNumber;
+    List<Polygon> polygonList;
 
     public SyntheticDataGenerator(int coordBounds, int pointsPerPoly, int numberOfPoly, int noiseNumber) {
         this.coordBounds = coordBounds;
         this.pointsPerPoly = pointsPerPoly;
         this.numberOfPoly = numberOfPoly;
         this.noiseNumber = noiseNumber;
+        polygonList = new ArrayList<>();
     }
 
-    public List<Polygon> createDataset() {
+    public List<Point> createDataset() {
         int regionBounds = coordBounds / numberOfPoly;      //dividing the range of points into separate sections so polygons don't overlap
-        List<Polygon> polygonList = new ArrayList<>();
+        List<Point> pointList = new ArrayList<>();
         for (int i = 0; i < numberOfPoly; i++) {
             Random rand = new Random();
-            List<RandomPoint> polyPoints = new ArrayList<>();
+            List<Point> polyPoints = new ArrayList<>();
             for (int j = 0; j < pointsPerPoly; j++) {
-                double xVal = rand.nextDouble() * ((regionBounds * (j + 1)) - (regionBounds * j)) + (regionBounds * j);
+                double xVal = rand.nextDouble() * ((regionBounds * (i + 1)) - (regionBounds * i)) + (regionBounds * i);
                 double yVal = rand.nextDouble() * (coordBounds);
-                RandomPoint point = new RandomPoint(xVal, yVal);
+                List<Double> values = new ArrayList<>();
+                values.add(xVal);
+                values.add(yVal);
+                Point point = new Point(values);
                 polyPoints.add(point);
+                pointList.add(point);
             }
-            List<RandomPoint> convexBorder = ConvexHull.makeHull(polyPoints);       //list of border points
-            for (RandomPoint borderPt : convexBorder) {
+            List<Point> convexBorder = ConvexHull.makeHull(polyPoints);       //list of border points
+            for (Point borderPt : convexBorder) {
                 polyPoints.remove(borderPt);        //creates list of only interior points
+                pointList.remove(borderPt);
             }
-            polygonList.add(new Polygon(i, polyPoints));
+            polygonList.add(new Polygon(i + 1, polyPoints));
         }
         //create noise points
-        List<RandomPoint> noisePoints = new ArrayList<>();
+        List<Point> noisePoints = new ArrayList<>();
         outerloop:
         while (noisePoints.size() < noiseNumber) {
             Random rand = new Random();
             double xVal = rand.nextDouble() * (coordBounds);
             double yVal = rand.nextDouble() * (coordBounds);
-            RandomPoint noisePt = new RandomPoint(xVal, yVal);
+            List<Double> values = new ArrayList<>();
+            values.add(xVal);
+            values.add(yVal);
+            Point noisePt = new Point(values);
             for (Polygon polygon : polygonList) {
                 if (polygon.insideBoundary(noisePt)) {
                     continue outerloop;
                 }
             }
             noisePoints.add(noisePt);
+            pointList.add(noisePt);
         }
         polygonList.add(new Polygon(0, noisePoints));       //storing noise points as a polygon for convenience
+        return pointList;
+    }
+
+    public List<Polygon> getGroundTruth() {
         return polygonList;
     }
 

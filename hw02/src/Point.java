@@ -1,8 +1,8 @@
 import java.util.List;
 
-public class Point {
+public class Point implements Comparable<Point> {
 
-    private List<Double> dimensionValues;
+    private final List<Double> dimensionValues;
     private List<Point> neighbors;
     private int identifier;
 
@@ -59,6 +59,14 @@ public class Point {
             cumulativeDist = cumulativeDist + Math.pow(pDimValues.get(i) - dimensionValues.get(i), 2);
         }
         return Math.sqrt(cumulativeDist);
+    }
+
+    public int compareTo(Point other) {
+        if (!dimensionValues.get(0).equals(other.getDimensionValues().get(0))) {
+            return Double.compare(dimensionValues.get(0), other.getDimensionValues().get(0));
+        } else {
+            return Double.compare(dimensionValues.get(1), other.getDimensionValues().get(1));
+        }
     }
 
 }

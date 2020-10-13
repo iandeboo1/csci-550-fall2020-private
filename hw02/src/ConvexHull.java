@@ -30,15 +30,15 @@ public final class ConvexHull {
     // Returns a new list of points representing the convex hull of
     // the given set of points. The convex hull excludes collinear points.
     // This algorithm runs in O(n log n) time.
-    public static List<RandomPoint> makeHull(List<RandomPoint> points) {
-        List<RandomPoint> newPoints = new ArrayList<>(points);
+    public static List<Point> makeHull(List<Point> points) {
+        List<Point> newPoints = new ArrayList<>(points);
         Collections.sort(newPoints);
         return makeHullPresorted(newPoints);
     }
 
 
     // Returns the convex hull, assuming that each points[i] <= points[i + 1]. Runs in O(n) time.
-    public static List<RandomPoint> makeHullPresorted(List<RandomPoint> points) {
+    public static List<Point> makeHullPresorted(List<Point> points) {
         if (points.size() <= 1)
             return new ArrayList<>(points);
 
@@ -46,12 +46,15 @@ public final class ConvexHull {
         // as per the mathematical convention, instead of "down" as per the computer
         // graphics convention. This doesn't affect the correctness of the result.
 
-        List<RandomPoint> upperHull = new ArrayList<>();
-        for (RandomPoint p : points) {
+        List<Point> upperHull = new ArrayList<>();
+        for (Point p : points) {
             while (upperHull.size() >= 2) {
-                RandomPoint q = upperHull.get(upperHull.size() - 1);
-                RandomPoint r = upperHull.get(upperHull.size() - 2);
-                if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x))
+                Point q = upperHull.get(upperHull.size() - 1);
+                Point r = upperHull.get(upperHull.size() - 2);
+                if ((q.getDimensionValues().get(0) - r.getDimensionValues().get(0)) *
+                        (p.getDimensionValues().get(1) - r.getDimensionValues().get(1)) >=
+                        (q.getDimensionValues().get(1) - r.getDimensionValues().get(1)) *
+                                (p.getDimensionValues().get(0) - r.getDimensionValues().get(0)))
                     upperHull.remove(upperHull.size() - 1);
                 else
                     break;
@@ -60,13 +63,16 @@ public final class ConvexHull {
         }
         upperHull.remove(upperHull.size() - 1);
 
-        List<RandomPoint> lowerHull = new ArrayList<>();
+        List<Point> lowerHull = new ArrayList<>();
         for (int i = points.size() - 1; i >= 0; i--) {
-            RandomPoint p = points.get(i);
+            Point p = points.get(i);
             while (lowerHull.size() >= 2) {
-                RandomPoint q = lowerHull.get(lowerHull.size() - 1);
-                RandomPoint r = lowerHull.get(lowerHull.size() - 2);
-                if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x))
+                Point q = lowerHull.get(lowerHull.size() - 1);
+                Point r = lowerHull.get(lowerHull.size() - 2);
+                if ((q.getDimensionValues().get(0) - r.getDimensionValues().get(0)) *
+                        (p.getDimensionValues().get(1) - r.getDimensionValues().get(1)) >=
+                        (q.getDimensionValues().get(1) - r.getDimensionValues().get(1)) *
+                                (p.getDimensionValues().get(0) - r.getDimensionValues().get(0)))
                     lowerHull.remove(lowerHull.size() - 1);
                 else
                     break;

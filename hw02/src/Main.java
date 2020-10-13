@@ -23,20 +23,37 @@ public class Main {
         //TODO: I HAVE NO IDEA WHAT TO SET THEM TOO SO THESE ARE JUST PLACEHOLDERS
 
         SyntheticDataGenerator syn = new SyntheticDataGenerator(coordBounds, pointPerPoly, numberOfPoly, noiseNumber);
-        List<Polygon> dataSet = syn.createDataset();
+        List<Point> synthDataset = syn.createDataset();
+        List<Polygon> truth = syn.getGroundTruth();
 
         DatabaseGenerator dbg = new DatabaseGenerator(csvFile);
-        List<Point> database = dbg.getDatabase();
+        List<Point> dataset = dbg.getDatabase();
 
         K_Means_Algorithm kma = new K_Means_Algorithm();
-        Map<Point, Cluster> clusters = kma.k_means(database, k, kMeansEps);
+        Map<Integer, Cluster> resultsSynthK = kma.k_means(synthDataset, k, kMeansEps);
+
+        PurityMeasure pm1 = new PurityMeasure(resultsSynthK, truth, synthDataset);
+        Double kmeansPurity = pm1.getPurity();
 
         DB_Scan_Algorithm dbs = new DB_Scan_Algorithm();
-        dbs.dbScan(database, dbsEps, minpts);
-        Map<Integer, Cluster> clusterSet = dbs.getClusterSet();
-        Cluster corePoints = dbs.getCorePoints();
-        Cluster borderPoints = dbs.getBorderPoints();
-        Cluster noisePoints = dbs.getNoisePoints();
+        dbs.dbScan(dataset, dbsEps, minpts);
+        Map<Integer, Cluster> resultsSynthDB = dbs.getClusterSet();
+
+        PurityMeasure pm2 = new PurityMeasure(resultsSynthDB, truth, synthDataset);
+        Double dbscanPurity = pm2.getPurity();
+
+
+
+
+
+//        DB_Scan_Algorithm dbs = new DB_Scan_Algorithm();
+//        dbs.dbScan(dataset, dbsEps, minpts);
+//        Map<Integer, Cluster> clusterSet = dbs.getClusterSet();
+//        Cluster corePoints = dbs.getCorePoints();
+//        Cluster borderPoints = dbs.getBorderPoints();
+//        Cluster noisePoints = dbs.getNoisePoints();
+
+
 
     }
 
