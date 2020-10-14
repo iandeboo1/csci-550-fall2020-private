@@ -42,7 +42,7 @@ public class PurityMeasure {
         }
     }
 
-    public Double getPurity() {
+    public double getPurity() {
         int purity = 0;
         for (int i = 0; i < expResults.size(); i++) {
             int maxSimilarity = 0;
