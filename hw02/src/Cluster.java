@@ -6,7 +6,9 @@ public class Cluster {
     private Point centroid;
     private List<Point> points;
 
-    public Cluster() {}
+    public Cluster() {
+        points = new ArrayList<>();
+    }
 
     public Point getCentroid() {
         return centroid;

@@ -57,11 +57,14 @@ public class DB_Scan_Algorithm {
     }
 
     public void densityConnected(Point point, int k) {
-        for (Point neighbor : point.getNeighbors()) {
-            neighbor.setIdentifier(k);
-            clusterSet.get(k).addPoint(neighbor);
-            if (corePoints.contains(neighbor)) {
-                densityConnected(neighbor, k);
+        if (!point.getVisited()) {
+            point.setVisited(true);
+            for (Point neighbor : point.getNeighbors()) {
+                neighbor.setIdentifier(k);
+                clusterSet.get(k).addPoint(neighbor);
+                if (corePoints.contains(neighbor)) {
+                    densityConnected(neighbor, k);
+                }
             }
         }
     }

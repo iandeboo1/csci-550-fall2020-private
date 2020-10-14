@@ -15,8 +15,8 @@ public class Main {
 
         final String csvFile = "iris.csv";
 
-        int k = 2;                  //how many clusters to generate for k-means
-        double kMeansEps = 0.25;    //represents the min change in centroid change before stopping iteration
+        int k = 3;                  //how many clusters to generate for k-means
+        double kMeansEps = 5;    //represents the min change in centroid change before stopping iteration
 
         double dbsEps = 0.25;       //represents the size of the neighborhood for DBScan
         int minpts = 5;             //minimum amount of neighbors to be considered a core point

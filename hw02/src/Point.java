@@ -1,13 +1,21 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Point implements Comparable<Point> {
 
     private final List<Double> dimensionValues;
-    private List<Point> neighbors;
+    private final List<Point> neighbors;
     private int identifier;
+    private boolean visited;
 
     public Point(List<Double> values) {
-        dimensionValues = values;
+        if (values == null) {
+            dimensionValues = new ArrayList<>();
+        } else {
+            dimensionValues = values;
+        }
+        neighbors = new ArrayList<>();
+        visited = false;
     }
 
     public void setIdentifier(int id) {
@@ -18,29 +26,21 @@ public class Point implements Comparable<Point> {
         return identifier;
     }
 
-    public int getNeighborhoodSize() {
-        return neighbors.size();
-    }
+    public int getNeighborhoodSize() { return neighbors.size(); }
 
-    public List<Point> getNeighbors() {
-        return neighbors;
-    }
+    public void setVisited(boolean status) { visited = status; }
 
-    public void addNeighbor(Point p) {
-        neighbors.add(p);
-    }
+    public boolean getVisited() {return visited; }
 
-    public List<Double> getDimensionValues() {
-        return dimensionValues;
-    }
+    public List<Point> getNeighbors() { return neighbors; }
 
-    public void addDimensionValue(Double value) {
-        dimensionValues.add(value);
-    }
+    public void addNeighbor(Point p) { neighbors.add(p); }
 
-    public boolean isNull() {
-        return dimensionValues.isEmpty();
-    }
+    public List<Double> getDimensionValues() { return dimensionValues; }
+
+    public void addDimensionValue(Double value) { dimensionValues.add(value); }
+
+    public boolean isNull() { return dimensionValues.isEmpty(); }
 
     public boolean equals(Point other) {
         List<Double> otherDimValues = other.getDimensionValues();

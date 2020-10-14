@@ -38,7 +38,9 @@ public class PurityMeasure {
                     }
                 }
             }
-            contingencyTable[clusterLabel - 1][partitionLabel - 1]++;
+            if (clusterLabel != 0 && partitionLabel != 0) {
+                contingencyTable[clusterLabel - 1][partitionLabel - 1]++;
+            }
         }
     }
 
