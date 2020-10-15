@@ -21,6 +21,7 @@ public class DB_Scan_Algorithm {
         for (Point point : D) {
             findNeighbors(point, D, E);
             point.setIdentifier(0);
+            //determine core points
             if (point.getNeighborhoodSize() >= minpts) {
                 corePoints.addPoint(point);
             }
@@ -29,6 +30,7 @@ public class DB_Scan_Algorithm {
         for (Point corePoint : corePoints.getPoints()) {
             if (corePoint.getIdentifier() == 0) {
                 k++;
+                //each core point placed in a separate cluster
                 corePoint.setIdentifier(k);
                 Cluster c = new Cluster();
                 c.addPoint(corePoint);
@@ -43,6 +45,7 @@ public class DB_Scan_Algorithm {
         }
         for (Point point : D) {
             if (!corePoints.contains(point) && !noisePoints.contains(point)) {
+                //point is in a clustering, but not a core point
                 borderPoints.addPoint(point);
             }
         }
@@ -58,7 +61,7 @@ public class DB_Scan_Algorithm {
 
     public void densityConnected(Point point, int k) {
         if (!point.getVisited()) {
-            point.setVisited(true);
+            point.setVisited(true);     //prevents infinite loop
             for (Point neighbor : point.getNeighbors()) {
                 neighbor.setIdentifier(k);
                 clusterSet.get(k).addPoint(neighbor);

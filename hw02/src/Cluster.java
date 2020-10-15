@@ -35,8 +35,4 @@ public class Cluster {
         return false;
     }
 
-    public void remove(Point p) {
-        points.remove(p);
-    }
-
 }

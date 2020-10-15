@@ -30,7 +30,7 @@ public class K_Means_Algorithm {
             c.setCentroid(centroid);
             clusters.put(i + 1, c);
         }
-        double overallCentroidImprovement = 0;      //stores value of how much the centroid shifted as a whole in the last cycle
+        double overallCentroidImprovement;      //stores value of how much the centroid shifted as a whole in the last iteration
         do {
             t++;
             for (Cluster cluster : clusters.values()) {
@@ -42,8 +42,9 @@ public class K_Means_Algorithm {
                 double minDist = 0;
                 for (Map.Entry<Integer, Cluster> cluster : clusters.entrySet()) {
                     //calculates Euclidean distance
-                    if (point.getDistanceBetween(cluster.getValue().getCentroid()) < minDist || minDist == 0) {
-                        minDist = Math.pow(point.getDistanceBetween(cluster.getValue().getCentroid()), 2);
+                    double sqDist = Math.pow(point.getDistanceBetween(cluster.getValue().getCentroid()), 2);
+                    if (sqDist < minDist || minDist == 0) {
+                        minDist = sqDist;
                         minDistClust = cluster.getKey();
                     }
                 }

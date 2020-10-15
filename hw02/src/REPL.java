@@ -17,11 +17,12 @@ public class REPL {
     //Kmeans
     private int k = 3;                  //how many clusters to generate for k-means
     private double kMeansEps = 5;       //represents the min change in centroid change before stopping iteration
+    // these values are set to work with the synthetic dataset, but should be 3 and 0.5 for iris dataset
 
     //DBscan
-    private double dbsEps = 0.25;       //represents the size of the neighborhood for DBScan
+    private double dbsEps = 5;          //minimum distance to be considered a neighbor
     private int minpts = 5;             //minimum amount of neighbors to be considered a core point
-    //TODO: ALSO FIND GOOD WAY TO PRINT RESULTS
+    //these values are set to work with the synthetic dataset, but should be 0.3 and 3 for iris dataset
 
     /*-----------------------------------------------Generated Values------------------------------------------------*/
     List<Point> synthDataset = null;
@@ -124,6 +125,11 @@ public class REPL {
                             System.out.println("Performed kmeans on synthetic dataset!");
                             for(Map.Entry<Integer, Cluster> entry : clusteringSynthK.entrySet()) {
                                 System.out.print("Cluster " + entry.getKey() + ": \n");
+                                System.out.print("Centroid: ");
+                                for (Double d : entry.getValue().getCentroid().getDimensionValues()) {
+                                    System.out.print("[" + d + "]  ");
+                                }
+                                System.out.print("\n");
                                 for (Point p : entry.getValue().getPoints()) {
                                     System.out.print("Point: ");
                                     for (Double d : p.getDimensionValues()) {
@@ -197,6 +203,8 @@ public class REPL {
                             resultsPurityK = pm1.getPurity();
                             System.out.println("Ran purity assessment of kmeans clustering on synthetic dataset!");
                             System.out.println("Purity: " + resultsPurityK);
+                            System.out.println("Values range from 0 to 1.");
+                            System.out.println("Values closer to 1 indicate the clustering results are more similar to the ground truth for the dataset.");
                         } else {
                             System.out.println("You must calculate clusters first (getClusters command)!");
                         }
@@ -206,6 +214,8 @@ public class REPL {
                             resultsPurityDB = pm2.getPurity();
                             System.out.println("Ran purity assessment of dbscan clustering on synthetic dataset!");
                             System.out.println("Purity: " + resultsPurityDB);
+                            System.out.println("Values range from 0 to 1.");
+                            System.out.println("Values closer to 1 indicate the clustering results are more similar to the ground truth for the dataset.");
                         } else {
                             System.out.println("You must calculate clusters first (getClusters command)!");
                         }
@@ -224,6 +234,8 @@ public class REPL {
                                 resultsSilK_Iris = scm1.getSilCoef();
                                 System.out.println("Ran silhouette assessment of kmeans clustering on iris dataset!");
                                 System.out.println("Silhouette Coefficient: " + resultsSilK_Iris);
+                                System.out.println("Values range from -1 to 1.");
+                                System.out.println("Values closer to 1 indicate that more of the points are closer to their clustering than other clustering.");
                             } else {
                                 System.out.println("You must calculate clusters first (getClusters command)!");
                             }
@@ -233,6 +245,8 @@ public class REPL {
                                 resultsSilK_Synth = scm2.getSilCoef();
                                 System.out.println("Ran silhouette assessment of kmeans clustering on synthetic dataset!");
                                 System.out.println("Silhouette Coefficient: " + resultsSilK_Synth);
+                                System.out.println("Values range from -1 to 1.");
+                                System.out.println("Values closer to 1 indicate that more of the points are closer to their clustering than other clustering.");
                             } else {
                                 System.out.println("You must calculate clusters first (getClusters command)!");
                             }
@@ -248,6 +262,8 @@ public class REPL {
                                 resultsSilDB_Iris = scm3.getSilCoef();
                                 System.out.println("Ran silhouette assessment of dbscan clustering on iris dataset!");
                                 System.out.println("Silhouette Coefficient: " + resultsSilDB_Iris);
+                                System.out.println("Values range from -1 to 1.");
+                                System.out.println("Values closer to 1 indicate that more of the points are closer to their clustering than other clustering.");
                             } else {
                                 System.out.println("You must calculate clusters first (getClusters command)!");
                             }
@@ -257,6 +273,8 @@ public class REPL {
                                 resultsSilDB_Synth = scm4.getSilCoef();
                                 System.out.println("Ran silhouette assessment of dbscan clustering on synthetic dataset!");
                                 System.out.println("Silhouette Coefficient: " + resultsSilDB_Synth);
+                                System.out.println("Values range from -1 to 1.");
+                                System.out.println("Values closer to 1 indicate that more of the points are closer to their clustering than other clustering.");
                             } else {
                                 System.out.println("You must calculate clusters first (getClusters command)!");
                             }
@@ -277,7 +295,7 @@ public class REPL {
                 System.out.println("\nCurrent Settings:\n\nint coordBounds = " + coordBounds + "   //all points for synthetic dataset are between 0 and this number (for both x and y values)" +
                         "\nint pointsPerPoly = " + pointPerPoly + "   //how many points make up the polygon boundary and the random points inside\nint numberOfPoly = " + numberOfPoly + " //number of polygons to generate for synthetic dataset" +
                         "\nint noiseNumber = " + noiseNumber + " //how many random noise points will be generated\n\nint k = " + k + " //how many clusters to generate for k-means\ndouble kMeansEps = " + kMeansEps + " //represents the min change in centroid change before stopping iteration" +
-                        "\n\ndouble dbsEps = " + dbsEps + " //represents the size of the neighborhood for DBScan\nint minpts = " + minpts + " //minimum amount of neighbors to be considered a core point\n\nWhich setting would you like to change?");
+                        "\n\ndouble dbsEps = " + dbsEps + " ////minimum distance to be considered a neighbor\nint minpts = " + minpts + " //minimum amount of neighbors to be considered a core point\n\nWhich setting would you like to change?");
                 line = scan.nextLine();
                 switch (line) {
                     case "coordBounds" -> {

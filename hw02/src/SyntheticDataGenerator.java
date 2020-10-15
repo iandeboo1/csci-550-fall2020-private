@@ -23,6 +23,7 @@ public class SyntheticDataGenerator {
             Random rand = new Random();
             List<Point> polyPoints = new ArrayList<>();
             for (int j = 0; j < pointsPerPoly; j++) {
+                //create all random points in partition
                 double xVal = rand.nextDouble() * ((regionBounds * (i + 1)) - (regionBounds * i)) + (regionBounds * i);
                 double yVal = rand.nextDouble() * (coordBounds);
                 List<Double> values = new ArrayList<>();
@@ -32,9 +33,11 @@ public class SyntheticDataGenerator {
                 polyPoints.add(point);
                 pointList.add(point);
             }
+            //draw polygon around partition
             List<Point> convexBorder = ConvexHull.makeHull(polyPoints);       //list of border points
             for (Point borderPt : convexBorder) {
-                polyPoints.remove(borderPt);        //creates list of only interior points
+                //creates list of only interior points
+                polyPoints.remove(borderPt);
                 pointList.remove(borderPt);
             }
             polygonList.add(new Polygon(i + 1, polyPoints));
@@ -52,6 +55,7 @@ public class SyntheticDataGenerator {
             Point noisePt = new Point(values);
             for (Polygon polygon : polygonList) {
                 if (polygon.insideBoundary(noisePt)) {
+                    //noise point lies within a polygon, discard it
                     continue outerloop;
                 }
             }

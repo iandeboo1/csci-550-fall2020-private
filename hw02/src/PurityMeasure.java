@@ -21,6 +21,7 @@ public class PurityMeasure {
             int clusterLabel = 0;
             int partitionLabel = 0;
             clusterLoop:
+            //find which cluster the point is in
             for (Map.Entry<Integer, Cluster> cluster : expResults.entrySet()) {
                 for (Point p : cluster.getValue().getPoints()) {
                     if (pt.equals(p)) {
@@ -30,6 +31,7 @@ public class PurityMeasure {
                 }
             }
             partitionLoop:
+            //find which cluster the point is in
             for (Polygon poly : truth) {
                 for (Point p : poly.getInteriorPoints()) {
                     if (pt.equals(p)) {
@@ -45,17 +47,18 @@ public class PurityMeasure {
     }
 
     public double getPurity() {
-        int purity = 0;
+        double purity = 0.0;
         for (int i = 0; i < expResults.size(); i++) {
             int maxSimilarity = 0;
             for (int j = 0; j < truth.size(); j++) {
+                //finds partition with max similarity to cluster
                 if (contingencyTable[i][j] > maxSimilarity) {
                     maxSimilarity = contingencyTable[i][j];
                 }
             }
             purity = purity + maxSimilarity;
         }
-        return (double)(purity / dataset.size());
+        return purity / dataset.size();
     }
 
 }

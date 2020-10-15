@@ -16,6 +16,7 @@ public class SilhouetteCoefficientMeasure {
     }
 
     public void createPtsList() {
+        //converts map of clusters to list of all points, for use in pairwise matrix
         for (Map.Entry<Integer, Cluster> entry : results.entrySet()) {
             for (Point pt : entry.getValue().getPoints()) {
                 pt.setIdentifier(entry.getKey());       //ensures each point has a set clusterID
@@ -29,8 +30,10 @@ public class SilhouetteCoefficientMeasure {
         for (Point pt : allPoints) {
             for (Point p : allPoints) {
                 if (allPoints.indexOf(p) == allPoints.indexOf(pt)) {
+                    //sets matrix diagonal to 0s
                     pairwiseMatrix[allPoints.indexOf(pt)][allPoints.indexOf(p)] = 0;
                 } else if (allPoints.indexOf(p) > allPoints.indexOf(pt)) {
+                    //only fills upper triangle of matrix
                     pairwiseMatrix[allPoints.indexOf(pt)][allPoints.indexOf(p)] = pt.getDistanceBetween(p);
                 }
             }
@@ -70,6 +73,7 @@ public class SilhouetteCoefficientMeasure {
                     }
                     clusterSeparation = clusterSeparation / cluster.getValue().getPoints().size();
                     if (separation == 0 || clusterSeparation < separation) {
+                        //finds closest cluster to pt, other than it's own
                         separation = clusterSeparation;
                     }
                 }
