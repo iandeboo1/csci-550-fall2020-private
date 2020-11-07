@@ -1,3 +1,5 @@
+import com.sun.source.tree.BinaryTree;
+
 import java.util.*;
 
 public class DecisionTree {
@@ -5,15 +7,23 @@ public class DecisionTree {
     private double purity;
     private String majorityClass;
     private Map<String, Integer> classLabels;
-    private
+    private Tree tree;
 
-    public DecisionTree() { }
+    public DecisionTree() {
+        tree = new Tree();
+        tree.setRoot(new Node());
+    }
 
     public void decisionTreeAlgorithm(List<Point> D, int eta, double pi) {
+        this.decisionTreeAlgorithm(D, eta, pi, tree.getRoot());
+    }
+
+    public void decisionTreeAlgorithm(List<Point> D, int eta, double pi, Node parent) {
         int n = D.size();
         getPurity(D, n);
         if (n < eta || purity >= pi) {
-            //TODO: create leaf node with label: majorityClass
+            parent.setIsLeaf(true);
+            parent.setLabel(majorityClass);
             return;
         }
         Map<String, Double> splitPoint = new HashMap<>();
@@ -39,9 +49,15 @@ public class DecisionTree {
                 Dy.add(pt);
             }
         }
-        //TODO: CREATE INTERNAL NODE AND 2 CHILD NODES
-        decisionTreeAlgorithm(Dy, eta, pi);
-        decisionTreeAlgorithm(Dn, eta, pi);
+        parent.setSplitDimension(dim);
+        parent.setSplitValue(splitPoint.get("Point"));
+        Node LChild = new Node();
+        Node RChild = new Node();
+        parent.setLChild(LChild);
+        parent.setRChild(RChild);
+
+        decisionTreeAlgorithm(Dy, eta, pi, LChild);
+        decisionTreeAlgorithm(Dn, eta, pi, RChild);
     }
 
     private void getPurity(List<Point> D, int n) {
@@ -135,6 +151,10 @@ public class DecisionTree {
             probSum += (d * Math.log(d));
         }
         return -probSum;
+    }
+
+    public Tree getTree() {
+        return tree;
     }
 
 
