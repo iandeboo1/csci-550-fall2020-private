@@ -56,6 +56,12 @@ public class DecisionTree {
         parent.setLChild(LChild);
         parent.setRChild(RChild);
 
+        if (Dy.size() < eta || Dn.size() < eta) {
+            parent.setIsLeaf(true);
+            parent.setLabel(majorityClass);
+            return;
+        }
+
         decisionTreeAlgorithm(Dy, eta, pi, LChild);
         decisionTreeAlgorithm(Dn, eta, pi, RChild);
     }

@@ -14,7 +14,7 @@ public class Node {
     }
 
     public void setRChild(Node n) {
-        if (rChild != null) {
+        if (rChild == null) {
             rChild = n;
         }
     }
@@ -24,7 +24,7 @@ public class Node {
     }
 
     public void setLChild(Node n) {
-        if (lChild != null) {
+        if (lChild == null) {
             lChild = n;
         }
     }

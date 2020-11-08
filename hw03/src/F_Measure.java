@@ -62,8 +62,9 @@ public class F_Measure {
         }
         double fMeasureSum = 0.0;
         for (Map.Entry<String, Integer> entry : trueLabels.entrySet()) {
-            fMeasureSum += (double)((2 * correctlyGuessed.get(entry.getKey())) /
-                    (entry.getValue() + predictedLabels.get(entry.getKey())));
+            if (correctlyGuessed.containsKey(entry.getKey()) && predictedLabels.containsKey(entry.getKey())) {
+                fMeasureSum += ((double)(2 * correctlyGuessed.get(entry.getKey())) / (entry.getValue() + predictedLabels.get(entry.getKey())));
+            }
         }
         return fMeasureSum / trueLabels.size();
     }

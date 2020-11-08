@@ -36,4 +36,8 @@ public class Tree {
         }
     }
 
+    public void printTree() {
+
+    }
+
 }
