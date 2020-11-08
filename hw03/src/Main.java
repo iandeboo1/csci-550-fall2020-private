@@ -9,7 +9,7 @@ public class Main {
 //        repl.runREPL();
 
         /*---------------------------------------------------Settings----------------------------------------------------*/
-        //DatabaseGenerator
+        // DatabaseGenerator
         String csvFileTrain = "iris_train.csv";    //cannot modify from REPL program
         String csvFileTest = "iris_test.csv";    //cannot modify from REPL program
         //DecisionTree
@@ -30,7 +30,6 @@ public class Main {
 
         KNN knn = new KNN();
         String label = knn.knnAlgorithm(dataset1, k, new Point());
-
 
     }
 

@@ -20,6 +20,7 @@ public class F_Measure {
         this.classifier = classifier;
     }
 
+    // parameter D is the test set
     public double fMeasureAlgorithm(List<Point> D) {
         KNN knn = new KNN();
         Map<String, Integer> correctlyGuessed = new HashMap<>();    // Nii
